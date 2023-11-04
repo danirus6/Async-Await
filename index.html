@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="main.js" defer></script>
+    <link rel="stylesheet" href="bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Pelis</h1>
+        <div class="form-group">
+            <h1>Busca aquí tu peli</h1>
+        </div>
+        <form id="form" class="form-group">
+            <input type="search" class="form-control" id="searchId" placeholder="buscar" />
+            <input type="submit" value="Buscar Pelicula" class="btn btn-primary" />
+        </form>
+        <section id="movies" class="d-flex justify-content-center flex-wrap"></section>
+    </div>
+</body>
+
+</html>
