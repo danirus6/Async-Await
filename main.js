@@ -7,13 +7,13 @@ const formSearch = document.getElementById('form');
 const searchInput = document.getElementById('searchId');
 
 
-const options = {
-    method: 'GET',
-    headers: {
-        accept: 'application/json',
-        Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmNmFhN2E5MDBkM2Y2YjA4ZTg0MmY2ZTRhNjQxMjk0OSIsInN1YiI6IjY1NDYxNGUzNmJlYWVhMDEwYjMyZmY0NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MlFipgwXq2B2-suY_9IfNeYwj0a3sR_qbFCLBQD8To0'
-    }
-};
+// const options = {
+//     method: 'GET',
+//     headers: {
+//         accept: 'application/json',
+//         Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmNmFhN2E5MDBkM2Y2YjA4ZTg0MmY2ZTRhNjQxMjk0OSIsInN1YiI6IjY1NDYxNGUzNmJlYWVhMDEwYjMyZmY0NyIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.MlFipgwXq2B2-suY_9IfNeYwj0a3sR_qbFCLBQD8To0'
+//     }
+// };
 
 const showMovies = (movies) => {
     moviesContainer.innerHTML = '';
@@ -24,7 +24,7 @@ const showMovies = (movies) => {
 				<div class="card-body">
 						<h3 class="card-header">${movie.original_title}</h3>
 						<h5 class="card-title">${movie.overview}</h5>
-                        <h5 class="card-title">${arrayGenresName}</h5 >
+                        <h5 class="card-title">${getGenres(movie.genre_ids)}</h5 >
 					</div >
      	</div >
     `
@@ -34,18 +34,21 @@ const showMovies = (movies) => {
 const getGenres = async (a) => {
     const result = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?language=en&api_key=${APIKEY}`);
     console.log(result);
-    let arrayGenresName = [];
+    const arrayGenresName = [];
+    let cadena;
+    console.log(a);
+    console.log(result.data.genres);
     result.data.genres.forEach((genres => {
         try {
             if (a.includes(genres.id)) {
                 arrayGenresName.push(genres.name);
-                console.log(genres.name);
+                console.log("arrayGeneros: ",arrayGenresName);
             }
         } catch (error) {
             console.log(error);
         }
     }))
-    return arrayGenresName;
+    cadena = arrayGenresName.join(',')
 
 }
 
@@ -53,16 +56,17 @@ const getGenres = async (a) => {
 const searchMovies = async (e) => {
     e.preventDefault()
     try {
-        const search = searchInput.value
-        const res = await axios.get(`${url}?query=${search}&include_adult=false&page=1&api_key=${APIKEY}`)
-
-
+        const search = searchInput.value;
+        const res = await axios.get(`${url}?query=${search}&include_adult=false&page=1&api_key=${APIKEY}`);
         console.log(res);
-        const movies = res.data.results
-        // getGenres()
-        showMovies(movies)
+        const movies = res.data.results;
+        movies.forEach((movie) => {
+             getGenres(movie.genre_ids)
+        });
+       
+        showMovies(movies);
     } catch (error) {
-        console.error(error)
+        console.error(error);
     }
 }
 
