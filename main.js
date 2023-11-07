@@ -24,12 +24,30 @@ const showMovies = (movies) => {
 				<div class="card-body">
 						<h3 class="card-header">${movie.original_title}</h3>
 						<h5 class="card-title">${movie.overview}</h5>
-					</div>
-     	</div>
-		`
+                        <h5 class="card-title">${arrayGenresName}</h5 >
+					</div >
+     	</div >
+    `
     })
 }
 
+const getGenres = async (a) => {
+    const result = await axios.get(`https://api.themoviedb.org/3/genre/movie/list?language=en&api_key=${APIKEY}`);
+    console.log(result);
+    let arrayGenresName = [];
+    result.data.genres.forEach((genres => {
+        try {
+            if (a.includes(genres.id)) {
+                arrayGenresName.push(genres.name);
+                console.log(genres.name);
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }))
+    return arrayGenresName;
+
+}
 
 
 const searchMovies = async (e) => {
@@ -37,8 +55,11 @@ const searchMovies = async (e) => {
     try {
         const search = searchInput.value
         const res = await axios.get(`${url}?query=${search}&include_adult=false&page=1&api_key=${APIKEY}`)
+
+
         console.log(res);
         const movies = res.data.results
+        // getGenres()
         showMovies(movies)
     } catch (error) {
         console.error(error)
